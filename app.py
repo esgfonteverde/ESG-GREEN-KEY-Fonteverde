@@ -7,21 +7,13 @@ st.set_page_config(
     layout="wide"
 )
 
-# HEADER
+st.title("🌿 Fonteverde Thermal Spa Resort")
+st.subheader("Green Key Audit Manager")
 
-col1, col2 = st.columns([1, 4])
-
-with col1:
-    try:
-        st.image("logo_ftv.webp", width=180)
-    except:
-        st.write("🌿")
-
-with col2:
-    st.title("Fonteverde Thermal Spa Resort")
-    st.subheader("Green Key Audit Manager")
-
-st.divider()
+try:
+    st.image("logo_ftv.webp", width=250)
+except:
+    st.info("Logo non disponibile")
 
 FILE = "Green_Key_Master_Audit_File_Fonteverde_2026_2027.xlsx"
 
@@ -31,7 +23,7 @@ try:
 
     sheets = xls.sheet_names
 
-    pagina = st.sidebar.radio(
+    page = st.sidebar.selectbox(
         "Menu",
         [
             "Dashboard",
@@ -39,48 +31,78 @@ try:
         ]
     )
 
-    if pagina == "Dashboard":
+    if page == "Dashboard":
 
-        totale_righe = 0
+        st.header("Dashboard")
 
-        for foglio in sheets:
+        total_rows = 0
+
+        for sheet in sheets:
+
             try:
                 df_temp = pd.read_excel(
                     FILE,
-                    sheet_name=foglio
+                    sheet_name=sheet
                 )
 
-                totale_righe += len(df_temp)
+                total_rows += len(df_temp)
 
             except:
                 pass
 
-        st.subheader("Panoramica")
+        col1, col2 = st.columns(2)
 
-        c1, c2, c3 = st.columns(3)
-
-        c1.metric(
-            "Fogli Excel",
+        col1.metric(
+            "Numero Fogli",
             len(sheets)
         )
 
-        c2.metric(
-            "Record Totali",
-            totale_righe
+        col2.metric(
+            "Totale Record",
+            total_rows
         )
-
-        c3.metric(
-            "Stato Sistema",
-            "Online"
-        )
-
-        st.divider()
 
         st.subheader("Fogli disponibili")
 
-        for foglio in sheets:
-            st.success(foglio)
+        for sheet in sheets:
+            st.write("✅", sheet)
 
-    elif pagina == "Esplora Excel":
+    elif page == "Esplora Excel":
 
-       
+        selected_sheet = st.selectbox(
+            "Seleziona foglio",
+            sheets
+        )
+
+        df = pd.read_excel(
+            FILE,
+            sheet_name=selected_sheet
+        )
+
+        st.write(f"Righe: {len(df)}")
+
+        search = st.text_input(
+            "Ricerca"
+        )
+
+        if search:
+
+            mask = df.astype(str).apply(
+                lambda x: x.str.contains(
+                    search,
+                    case=False,
+                    na=False
+                )
+            ).any(axis=1)
+
+            df = df[mask]
+
+        st.dataframe(
+            df,
+            use_container_width=True,
+            height=600
+        )
+
+except Exception as e:
+
+    st.error(str(e))
