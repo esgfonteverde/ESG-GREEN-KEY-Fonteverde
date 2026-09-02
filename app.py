@@ -1,19 +1,35 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="ESG Audit Manager",
-    page_icon="🌿",
+    page_title="Test",
     layout="wide"
 )
 
-st.title("ESG AUDIT MANAGER")
+st.title("TEST")
+
+st.write("App avviata correttamente")
 
 try:
     st.image(
         "banner_fonteverde_esg.jpg",
         use_container_width=True
     )
-except:
-    st.warning("Banner non trovato")
 
-st.success("Dashboard in costruzione")
+    st.success("Banner OK")
+
+except Exception as e:
+
+    st.error(f"Banner errore: {e}")
+
+try:
+
+    st.image(
+        "logo_ftv.webp",
+        width=200
+    )
+
+    st.success("Logo OK")
+
+except Exception as e:
+
+    st.error(f"Logo errore: {e}")
