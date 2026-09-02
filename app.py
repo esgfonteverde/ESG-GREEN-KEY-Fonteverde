@@ -1,35 +1,95 @@
 import streamlit as st
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+
+# ==================================================
+# PAGE CONFIG
+# ==================================================
 
 st.set_page_config(
-    page_title="Test",
+    page_title="ESG Audit Manager",
+    page_icon="🌿",
     layout="wide"
 )
 
-st.title("TEST")
+# ==================================================
+# CSS
+# ==================================================
 
-st.write("App avviata correttamente")
+st.markdown("""
+<style>
+
+.block-container{
+    padding-top:0rem;
+}
+
+.kpi-card{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0px 4px 15px rgba(0,0,0,0.08);
+}
+
+.kpi-number{
+    font-size:42px;
+    font-weight:700;
+    color:#1F4D3A;
+}
+
+.kpi-label{
+    font-size:14px;
+    color:#666;
+}
+
+div[data-testid="stSidebar"]{
+    background-color:#143225;
+}
+
+div[data-testid="stSidebar"] *{
+    color:white;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ==================================================
+# SIDEBAR
+# ==================================================
 
 try:
-    st.image(
-        "banner_fonteverde_esg.jpg",
-        use_container_width=True
-    )
-
-    st.success("Banner OK")
-
-except Exception as e:
-
-    st.error(f"Banner errore: {e}")
-
-try:
-
-    st.image(
+    st.sidebar.image(
         "logo_ftv.webp",
-        width=200
+        width=180
     )
+except:
+    st.sidebar.write("Fonteverde")
 
-    st.success("Logo OK")
+menu = st.sidebar.radio(
+    "Navigazione",
+    [
+        "🏠 Dashboard",
+        "📋 Certifications",
+        "📁 Repository",
+        "📊 Gap Analysis",
+        "📈 ESG KPI",
+        "📑 Reports"
+    ]
+)
 
-except Exception as e:
+# ==================================================
+# DASHBOARD
+# ==================================================
 
-    st.error(f"Logo errore: {e}")
+if menu == "🏠 Dashboard":
+
+    try:
+        st.image(
+            "banner_fonteverde_esg.jpg",
+            use_container_width=True
+        )
+    except:
+        st.title("ESG AUDIT MANAGER")
+
+    st.markdown("## ESG AUDIT 
