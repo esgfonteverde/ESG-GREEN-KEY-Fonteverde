@@ -78,12 +78,10 @@ menu = st.sidebar.radio(
 # ==========================================================
 
 try:
-
     xls = pd.ExcelFile(FILE)
     sheet_names = xls.sheet_names
 
 except Exception:
-
     st.error("Errore caricamento Excel")
     st.stop()
 
@@ -93,8 +91,6 @@ except Exception:
 
 if menu == "🏠 Dashboard":
 
-    # HERO BANNER
-
     try:
         st.image(
             "banner_fonteverde_esg.jpg",
@@ -103,14 +99,11 @@ if menu == "🏠 Dashboard":
     except:
         st.warning("Banner non disponibile")
 
-    # CALCOLI BASE
-
     total_rows = 0
 
     for sheet in sheet_names:
 
         try:
-
             temp = pd.read_excel(
                 FILE,
                 sheet_name=sheet
@@ -130,14 +123,9 @@ if menu == "🏠 Dashboard":
     evidences = int(total_rows * 0.1)
     gap = max(criteria - evidences, 0)
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # KPI
-
     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
-
         st.markdown(f"""
         <div class="metric-card">
             <div class="metric-number">{readiness}%</div>
@@ -146,7 +134,6 @@ if menu == "🏠 Dashboard":
         """, unsafe_allow_html=True)
 
     with c2:
-
         st.markdown(f"""
         <div class="metric-card">
             <div class="metric-number">{criteria}</div>
@@ -155,7 +142,6 @@ if menu == "🏠 Dashboard":
         """, unsafe_allow_html=True)
 
     with c3:
-
         st.markdown(f"""
         <div class="metric-card">
             <div class="metric-number">{evidences}</div>
@@ -164,7 +150,6 @@ if menu == "🏠 Dashboard":
         """, unsafe_allow_html=True)
 
     with c4:
-
         st.markdown(f"""
         <div class="metric-card">
             <div class="metric-number">{gap}</div>
@@ -173,8 +158,6 @@ if menu == "🏠 Dashboard":
         """, unsafe_allow_html=True)
 
     st.markdown("##")
-
-    # GRAFICI
 
     left, right = st.columns(2)
 
@@ -196,14 +179,7 @@ if menu == "🏠 Dashboard":
             df_donut,
             values="Value",
             names="Status",
-            hole=0.65,
-            color="Status",
-            color_discrete_map={
-                "Validated": "#2C6E49",
-                "Partial": "#D4AF37",
-                "Review": "#DCCDB3",
-                "Missing": "#C94C4C"
-            }
+            hole=0.65
         )
 
         st.plotly_chart(
@@ -216,7 +192,6 @@ if menu == "🏠 Dashboard":
         st.subheader("Performance by Area")
 
         df_bar = pd.DataFrame({
-
             "Area": [
                 "Management",
                 "Energy",
@@ -225,6 +200,86 @@ if menu == "🏠 Dashboard":
                 "Procurement",
                 "Guest Awareness"
             ],
-
             "Score": [
                 92,
+                86,
+                81,
+                88,
+                63,
+                74
+            ]
+        })
+
+        fig2 = px.bar(
+            df_bar,
+            x="Score",
+            y="Area",
+            orientation="h",
+            color="Score",
+            color_continuous_scale="Greens"
+        )
+
+        st.plotly_chart(
+            fig2,
+            use_container_width=True
+        )
+
+    st.markdown("##")
+
+    a1, a2 = st.columns(2)
+
+    with a1:
+
+        st.subheader("🔥 Priority Actions")
+
+        st.warning("Upload evidence for criterion 4.3")
+        st.warning("Update sustainable procurement policy")
+        st.warning("Complete guest communication")
+        st.warning("Update Green Team documentation")
+
+    with a2:
+
+        st.subheader("📄 Recent Evidence")
+
+        st.success("Sustainability_Policy.pdf")
+        st.success("Green_Team_Meeting.pdf")
+        st.success("Water_Consumption.xlsx")
+        st.success("Energy_Monitoring.xlsx")
+
+# ==========================================================
+# EXPLORER
+# ==========================================================
+
+elif menu == "📊 Esplora Excel":
+
+    sheet = st.selectbox(
+        "Seleziona foglio",
+        sheet_names
+    )
+
+    df = pd.read_excel(
+        FILE,
+        sheet_name=sheet
+    )
+
+    search = st.text_input(
+        "Ricerca"
+    )
+
+    if search:
+
+        mask = df.astype(str).apply(
+            lambda x: x.str.contains(
+                search,
+                case=False,
+                na=False
+            )
+        ).any(axis=1)
+
+        df = df[mask]
+
+    st.dataframe(
+        df,
+        use_container_width=True,
+        height=700
+    )
