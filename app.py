@@ -13,7 +13,7 @@ FILE = "Green_Key_Master_Audit_File_Fonteverde_2026_2027.xlsx"
 # HEADER
 
 st.title("🌿 Green Key Audit Manager")
-st.caption("Fonteverde Lifestyle Retreat | Green Key 2026-2027")
+st.caption("Fonteverde Thermal Spa Resort | Green Key 2026-2027")
 
 try:
 
