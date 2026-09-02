@@ -1,4 +1,11 @@
-import streamlit as st
+col1, col2 = st.columns([1,4])
+
+with col1:
+    st.image("logo_fonteverde.webp", width=180)
+
+with col2:
+    st.title("Fonteverde Thermal Spa Resort")
+    st.caption("Green Key Audit Manager")import streamlit as st
 import pandas as pd
 import plotly.express as px
 
