@@ -1,6 +1,32 @@
 import streamlit as st
 import pandas as pd
+st.markdown("""
+<style>
 
+.main {
+    background-color: #F8F6F0;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.08);
+}
+
+.metric-big {
+    font-size: 42px;
+    font-weight: bold;
+    color: #2C6E49;
+}
+
+.metric-label {
+    color: #666;
+    font-size: 14px;
+}
+
+</style>
+""", unsafe_allow_html=True)
 st.set_page_config(
     page_title="Fonteverde Green Key Manager",
     page_icon="🌿",
