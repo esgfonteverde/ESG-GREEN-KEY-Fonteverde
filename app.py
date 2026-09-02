@@ -3,9 +3,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-# -------------------------------------------------
-# CONFIG
-# -------------------------------------------------
+# =====================================================
+# CONFIGURAZIONE PAGINA
+# =====================================================
 
 st.set_page_config(
     page_title="ESG Audit Manager",
@@ -13,24 +13,23 @@ st.set_page_config(
     layout="wide"
 )
 
-# -------------------------------------------------
+# =====================================================
 # CSS
-# -------------------------------------------------
+# =====================================================
 
 st.markdown("""
 <style>
 
 .block-container{
     padding-top:1rem;
-    padding-bottom:2rem;
 }
 
 .kpi-card{
     background:white;
-    padding:24px;
-    border-radius:18px;
-    box-shadow:0px 4px 18px rgba(0,0,0,0.08);
+    border-radius:20px;
+    padding:20px;
     text-align:center;
+    box-shadow:0 3px 12px rgba(0,0,0,0.08);
 }
 
 .kpi-number{
@@ -40,24 +39,12 @@ st.markdown("""
 }
 
 .kpi-label{
-    color:#555;
-    font-size:15px;
-}
-
-.section-box{
-    background:white;
-    padding:20px;
-    border-radius:18px;
-    box-shadow:0px 4px 18px rgba(0,0,0,0.08);
-}
-
-.action-item{
-    padding:10px;
-    border-bottom:1px solid #eee;
+    color:#666;
+    font-size:14px;
 }
 
 div[data-testid="stSidebar"]{
-    background-color:#143225;
+    background:#143225;
 }
 
 div[data-testid="stSidebar"] *{
@@ -67,92 +54,92 @@ div[data-testid="stSidebar"] *{
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------------------------------
+# =====================================================
 # SIDEBAR
-# -------------------------------------------------
+# =====================================================
 
-st.sidebar.image(
-    "logo_ftv.webp",
-    width=180
-)
+try:
+    st.sidebar.image("logo_ftv.webp", width=180)
+except:
+    st.sidebar.write("Fonteverde")
 
-page = st.sidebar.radio(
-    "Navigazione",
+pagina = st.sidebar.radio(
+    "Menu",
     [
         "🏠 Dashboard",
         "📋 Certifications",
-        "📁 Evidence Repository",
+        "📁 Repository",
         "📊 Gap Analysis",
-        "📈 ESG KPI",
-        "✅ Corrective Actions",
+        "📈 KPI ESG",
         "📑 Reports"
     ]
 )
 
-# -------------------------------------------------
+# =====================================================
 # DASHBOARD
-# -------------------------------------------------
+# =====================================================
 
-if page == "🏠 Dashboard":
+if pagina == "🏠 Dashboard":
 
-    st.image(
-        "banner_fonteverde_esg.jpg",
-        use_container_width=True
-    )
+    # Banner
+
+    try:
+        st.image(
+            "banner_fonteverde_esg.jpg",
+            use_container_width=True
+        )
+    except:
+        st.title("ESG AUDIT MANAGER")
+        st.caption("Fonteverde Thermal Spa Resort")
 
     st.write("")
 
-    # KPI CARDS
+    # KPI
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1,c2,c3,c4 = st.columns(4)
 
     with c1:
         st.markdown("""
         <div class="kpi-card">
-            <div class="kpi-number">87%</div>
-            <div class="kpi-label">Audit Readiness</div>
+        <div class="kpi-number">87%</div>
+        <div class="kpi-label">Audit Readiness</div>
         </div>
         """, unsafe_allow_html=True)
 
     with c2:
         st.markdown("""
         <div class="kpi-card">
-            <div class="kpi-number">132</div>
-            <div class="kpi-label">Criteria</div>
+        <div class="kpi-number">132</div>
+        <div class="kpi-label">Criteria</div>
         </div>
         """, unsafe_allow_html=True)
 
     with c3:
         st.markdown("""
         <div class="kpi-card">
-            <div class="kpi-number">95</div>
-            <div class="kpi-label">Evidence</div>
+        <div class="kpi-number">95</div>
+        <div class="kpi-label">Evidence</div>
         </div>
         """, unsafe_allow_html=True)
 
     with c4:
         st.markdown("""
         <div class="kpi-card">
-            <div class="kpi-number">37</div>
-            <div class="kpi-label">Gap</div>
+        <div class="kpi-number">37</div>
+        <div class="kpi-label">Gap</div>
         </div>
         """, unsafe_allow_html=True)
 
     st.write("")
     st.write("")
 
-    col1, col2, col3 = st.columns([1.2,1,1])
+    left,right = st.columns(2)
 
-    # ---------------------------------------------
+    # ==========================================
     # GAUGE
-    # ---------------------------------------------
+    # ==========================================
 
-    with col1:
-
-        st.markdown(
-            '<div class="section-box">',
-            unsafe_allow_html=True
-        )
+    with left:
 
         fig = go.Figure(
             go.Indicator(
@@ -162,64 +149,6 @@ if page == "🏠 Dashboard":
                 title={"text":"Audit Readiness"},
                 gauge={
                     "axis":{"range":[0,100]},
-                    "bar":{"color":"#1f4d3a"},
-                    "steps":[
-                        {"range":[0,60],"color":"#e74c3c"},
-                        {"range":[60,85],"color":"#f1c40f"},
-                        {"range":[85,100],"color":"#2ecc71"}
-                    ]
+                    "bar":{"color":"#1f4d3a"}
                 }
             )
-        )
-
-        fig.update_layout(
-            height=350,
-            margin=dict(l=10,r=10,t=50,b=10)
-        )
-
-        st.plotly_chart(
-            fig,
-            use_container_width=True
-        )
-
-        st.markdown(
-            "</div>",
-            unsafe_allow_html=True
-        )
-
-    # ---------------------------------------------
-    # DONUT
-    # ---------------------------------------------
-
-    with col2:
-
-        donut = pd.DataFrame({
-            "Status":[
-                "Validati",
-                "Parziali",
-                "Da verificare",
-                "Assenti"
-            ],
-            "Value":[54,21,15,10]
-        })
-
-        fig2 = px.pie(
-            donut,
-            values="Value",
-            names="Status",
-            hole=0.65
-        )
-
-        fig2.update_layout(
-            title="Conformità Complessiva",
-            height=350
-        )
-
-        st.plotly_chart(
-            fig2,
-            use_container_width=True
-        )
-
-    # ---------------------------------------------
-    # PERFORMANCE
-    # -------------
