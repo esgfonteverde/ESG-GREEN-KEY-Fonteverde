@@ -1,61 +1,55 @@
-col1, col2 = st.columns([1,4])
-
-with col1:
-    st.image("logo_fonteverde.webp", width=180)
-
-with col2:
-    st.title("Fonteverde Thermal Spa Resort")
-    st.caption("Green Key Audit Manager")import streamlit as st
+import streamlit as st
 import pandas as pd
 import plotly.express as px
 
 st.set_page_config(
-    page_title="Green Key Audit Manager",
+    page_title="Fonteverde Green Key Manager",
     page_icon="🌿",
     layout="wide"
 )
 
 FILE = "Green_Key_Master_Audit_File_Fonteverde_2026_2027.xlsx"
 
-# HEADER
+# ===== LOGO E HEADER =====
 
-st.title("🌿 Green Key Audit Manager")
-st.caption("Fonteverde Thermal Spa Resort | Green Key 2026-2027")
+col1, col2 = st.columns([1,4])
+
+with col1:
+    st.image("logo_fonteverde.webp", width=180)
+
+with col2:
+    st.title("🌿 Fonteverde Thermal Spa Resort")
+    st.markdown("### Green Key Audit Manager")
+
+st.divider()
 
 try:
 
     xls = pd.ExcelFile(FILE)
 
-    sheet_names = xls.sheet_names
+    sheets = xls.sheet_names
 
-    st.sidebar.title("Navigazione")
+    st.sidebar.title("🌿 Green Key Manager")
 
     page = st.sidebar.radio(
-        "Seleziona sezione",
+        "Menu",
         [
-            "Dashboard",
-            "Esplora Excel"
+            "🏠 Dashboard",
+            "📊 Esplora Excel"
         ]
     )
 
-    if page == "Dashboard":
-
-        st.markdown("---")
-
-        total_sheets = len(sheet_names)
+    if page == "🏠 Dashboard":
 
         total_rows = 0
 
-        for sheet in sheet_names:
-
+        for sheet in sheets:
             try:
-                df_tmp = pd.read_excel(
+                temp = pd.read_excel(
                     FILE,
                     sheet_name=sheet
                 )
-
-                total_rows += len(df_tmp)
-
+                total_rows += len(temp)
             except:
                 pass
 
@@ -64,35 +58,35 @@ try:
             100
         )
 
-        col1,col2,col3,col4 = st.columns(4)
+        st.subheader("Audit Readiness")
 
-        col1.metric(
-            "Fogli Excel",
-            total_sheets
+        c1,c2,c3,c4 = st.columns(4)
+
+        c1.metric(
+            "📄 Fogli",
+            len(sheets)
         )
 
-        col2.metric(
-            "Righe Totali",
+        c2.metric(
+            "📋 Record",
             total_rows
         )
 
-        col3.metric(
-            "Repository",
+        c3.metric(
+            "✅ Repository",
             "Attivo"
         )
 
-        col4.metric(
-            "Audit Readiness",
+        c4.metric(
+            "🎯 Readiness",
             f"{readiness}%"
         )
 
-        st.markdown("---")
+        st.divider()
 
         left,right = st.columns([1,1])
 
         with left:
-
-            st.subheader("Audit Readiness")
 
             if readiness >= 85:
                 st.success("🟢 Ready for Audit")
@@ -109,8 +103,8 @@ try:
 
             chart = pd.DataFrame({
                 "Stato":[
-                    "Documentazione disponibile",
-                    "Documentazione da verificare"
+                    "Completato",
+                    "Da verificare"
                 ],
                 "Valore":[
                     readiness,
@@ -120,13 +114,13 @@ try:
 
             fig = px.pie(
                 chart,
-                names="Stato",
                 values="Valore",
-                hole=0.6,
+                names="Stato",
+                hole=0.65,
                 color="Stato",
                 color_discrete_map={
-                    "Documentazione disponibile":"green",
-                    "Documentazione da verificare":"lightgrey"
+                    "Completato":"#2C6E49",
+                    "Da verificare":"#D9D9D9"
                 }
             )
 
@@ -135,47 +129,39 @@ try:
                 use_container_width=True
             )
 
-        st.markdown("---")
+        st.divider()
 
-        st.subheader("📄 Fogli disponibili")
+        st.subheader("📂 Aree disponibili")
 
-        for sheet in sheet_names:
-            st.write("✅", sheet)
+        cols = st.columns(3)
 
-        st.markdown("---")
+        for i, sheet in enumerate(sheets):
+            cols[i % 3].info(sheet)
 
-        st.subheader("🚀 Prossimi sviluppi")
+        st.divider()
 
-        st.info("""
-        Versione futura:
+        st.subheader("🚀 Roadmap")
 
-        • Repository documentale PDF
-
-        • Collegamento Google Drive
-
-        • Evidenze Green Key
-
-        • KPI ESG
-
-        • Gap Analysis
-
-        • Gestione criteri
-
-        • Workflow Audit
+        st.markdown("""
+        - Repository PDF
+        - Google Drive Integration
+        - Evidenze Green Key
+        - KPI ESG
+        - Gap Analysis
+        - Gestione Audit
+        - Workflow Validazione
         """)
 
-    elif page == "Esplora Excel":
+    if page == "📊 Esplora Excel":
 
-        st.subheader("Esplora Workbook")
-
-        selected_sheet = st.selectbox(
-            "Seleziona foglio",
-            sheet_names
+        sheet = st.selectbox(
+            "Foglio",
+            sheets
         )
 
         df = pd.read_excel(
             FILE,
-            sheet_name=selected_sheet
+            sheet_name=sheet
         )
 
         c1,c2 = st.columns(2)
@@ -190,15 +176,15 @@ try:
             len(df.columns)
         )
 
-        search = st.text_input(
-            "Cerca nel foglio"
+        ricerca = st.text_input(
+            "🔍 Cerca"
         )
 
-        if search:
+        if ricerca:
 
             mask = df.astype(str).apply(
                 lambda x: x.str.contains(
-                    search,
+                    ricerca,
                     case=False,
                     na=False
                 )
@@ -214,6 +200,4 @@ try:
 
 except Exception as e:
 
-    st.error("Errore durante il caricamento")
-
-    st.code(str(e))
+    st.error(str(e))
