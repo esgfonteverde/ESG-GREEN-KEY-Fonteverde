@@ -1,256 +1,225 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 
-# --------------------------------------------------
-# CONFIGURAZIONE PAGINA
-# --------------------------------------------------
+# -------------------------------------------------
+# CONFIG
+# -------------------------------------------------
 
 st.set_page_config(
-    page_title="Fonteverde Green Key Manager",
+    page_title="ESG Audit Manager",
     page_icon="🌿",
     layout="wide"
 )
 
-# --------------------------------------------------
-# CSS PERSONALIZZATO
-# --------------------------------------------------
+# -------------------------------------------------
+# CSS
+# -------------------------------------------------
 
 st.markdown("""
 <style>
 
-.main {
-    background-color: #F8F6F0;
+.block-container{
+    padding-top:1rem;
+    padding-bottom:2rem;
 }
 
-.card {
-    background: white;
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0px 4px 15px rgba(0,0,0,0.08);
-    text-align: center;
+.kpi-card{
+    background:white;
+    padding:24px;
+    border-radius:18px;
+    box-shadow:0px 4px 18px rgba(0,0,0,0.08);
+    text-align:center;
 }
 
-.metric-big {
-    font-size: 42px;
-    font-weight: bold;
-    color: #2C6E49;
+.kpi-number{
+    font-size:42px;
+    font-weight:700;
+    color:#1f4d3a;
 }
 
-.metric-label {
-    color: #666666;
-    font-size: 14px;
+.kpi-label{
+    color:#555;
+    font-size:15px;
+}
+
+.section-box{
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    box-shadow:0px 4px 18px rgba(0,0,0,0.08);
+}
+
+.action-item{
+    padding:10px;
+    border-bottom:1px solid #eee;
+}
+
+div[data-testid="stSidebar"]{
+    background-color:#143225;
+}
+
+div[data-testid="stSidebar"] *{
+    color:white;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# --------------------------------------------------
-# FILE EXCEL
-# --------------------------------------------------
+# -------------------------------------------------
+# SIDEBAR
+# -------------------------------------------------
 
-FILE = "Green_Key_Master_Audit_File_Fonteverde_2026_2027.xlsx"
+st.sidebar.image(
+    "logo_ftv.webp",
+    width=180
+)
 
-# --------------------------------------------------
-# COVER
-# --------------------------------------------------
+page = st.sidebar.radio(
+    "Navigazione",
+    [
+        "🏠 Dashboard",
+        "📋 Certifications",
+        "📁 Evidence Repository",
+        "📊 Gap Analysis",
+        "📈 ESG KPI",
+        "✅ Corrective Actions",
+        "📑 Reports"
+    ]
+)
 
-try:
+# -------------------------------------------------
+# DASHBOARD
+# -------------------------------------------------
+
+if page == "🏠 Dashboard":
+
     st.image(
-        "fonteverde_cover.jpg",
+        "banner_fonteverde_esg.jpg",
         use_container_width=True
     )
-except:
-    st.warning("Cover non trovata")
 
-# --------------------------------------------------
-# HEADER
-# --------------------------------------------------
+    st.write("")
 
-col1, col2 = st.columns([1,4])
+    # KPI CARDS
 
-with col1:
+    c1, c2, c3, c4 = st.columns(4)
 
-    try:
-        st.image(
-            "logo_ftv.webp",
-            width=150
-        )
-    except:
-        st.write("🌿")
+    with c1:
+        st.markdown("""
+        <div class="kpi-card">
+            <div class="kpi-number">87%</div>
+            <div class="kpi-label">Audit Readiness</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-with col2:
+    with c2:
+        st.markdown("""
+        <div class="kpi-card">
+            <div class="kpi-number">132</div>
+            <div class="kpi-label">Criteria</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.title("Fonteverde Thermal Spa Resort")
+    with c3:
+        st.markdown("""
+        <div class="kpi-card">
+            <div class="kpi-number">95</div>
+            <div class="kpi-label">Evidence</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown(
-        "### Green Key Audit Manager"
-    )
+    with c4:
+        st.markdown("""
+        <div class="kpi-card">
+            <div class="kpi-number">37</div>
+            <div class="kpi-label">Gap</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-st.divider()
+    st.write("")
+    st.write("")
 
-# --------------------------------------------------
-# LETTURA EXCEL
-# --------------------------------------------------
+    col1, col2, col3 = st.columns([1.2,1,1])
 
-try:
+    # ---------------------------------------------
+    # GAUGE
+    # ---------------------------------------------
 
-    xls = pd.ExcelFile(FILE)
+    with col1:
 
-    sheets = xls.sheet_names
-
-    pagina = st.sidebar.radio(
-        "Menu",
-        [
-            "Dashboard",
-            "Esplora Excel"
-        ]
-    )
-
-    # ==========================================
-    # DASHBOARD
-    # ==========================================
-
-    if pagina == "Dashboard":
-
-        st.subheader("Executive Overview")
-
-        total_rows = 0
-
-        for sheet in sheets:
-
-            try:
-
-                temp_df = pd.read_excel(
-                    FILE,
-                    sheet_name=sheet
-                )
-
-                total_rows += len(temp_df)
-
-            except:
-                pass
-
-        # KPI
-
-        c1, c2, c3, c4 = st.columns(4)
-
-        with c1:
-
-            st.markdown("""
-            <div class="card">
-                <div class="metric-big">87%</div>
-                <div class="metric-label">Audit Readiness</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with c2:
-
-            st.markdown(f"""
-            <div class="card">
-                <div class="metric-big">{len(sheets)}</div>
-                <div class="metric-label">Fogli Excel</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with c3:
-
-            st.markdown(f"""
-            <div class="card">
-                <div class="metric-big">{total_rows}</div>
-                <div class="metric-label">Record Totali</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with c4:
-
-            st.markdown("""
-            <div class="card">
-                <div class="metric-big">Online</div>
-                <div class="metric-label">Sistema</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        st.divider()
-
-        st.subheader("Stato Audit")
-
-        st.progress(0.87)
-
-        st.success(
-            "🟢 Audit Readiness: 87% - Ready for Audit"
+        st.markdown(
+            '<div class="section-box">',
+            unsafe_allow_html=True
         )
 
-        st.divider()
-
-        st.subheader("Fogli presenti nel Master File")
-
-        col_a, col_b, col_c = st.columns(3)
-
-        for i, sheet in enumerate(sheets):
-
-            if i % 3 == 0:
-                col_a.info(sheet)
-
-            elif i % 3 == 1:
-                col_b.info(sheet)
-
-            else:
-                col_c.info(sheet)
-
-    # ==========================================
-    # ESPLORA EXCEL
-    # ==========================================
-
-    elif pagina == "Esplora Excel":
-
-        st.subheader("Esplora Workbook")
-
-        selected_sheet = st.selectbox(
-            "Seleziona foglio",
-            sheets
+        fig = go.Figure(
+            go.Indicator(
+                mode="gauge+number",
+                value=87,
+                number={"suffix":"%"},
+                title={"text":"Audit Readiness"},
+                gauge={
+                    "axis":{"range":[0,100]},
+                    "bar":{"color":"#1f4d3a"},
+                    "steps":[
+                        {"range":[0,60],"color":"#e74c3c"},
+                        {"range":[60,85],"color":"#f1c40f"},
+                        {"range":[85,100],"color":"#2ecc71"}
+                    ]
+                }
+            )
         )
 
-        df = pd.read_excel(
-            FILE,
-            sheet_name=selected_sheet
+        fig.update_layout(
+            height=350,
+            margin=dict(l=10,r=10,t=50,b=10)
         )
 
-        m1, m2 = st.columns(2)
-
-        m1.metric(
-            "Righe",
-            len(df)
+        st.plotly_chart(
+            fig,
+            use_container_width=True
         )
 
-        m2.metric(
-            "Colonne",
-            len(df.columns)
+        st.markdown(
+            "</div>",
+            unsafe_allow_html=True
         )
 
-        ricerca = st.text_input(
-            "🔍 Cerca nel foglio"
+    # ---------------------------------------------
+    # DONUT
+    # ---------------------------------------------
+
+    with col2:
+
+        donut = pd.DataFrame({
+            "Status":[
+                "Validati",
+                "Parziali",
+                "Da verificare",
+                "Assenti"
+            ],
+            "Value":[54,21,15,10]
+        })
+
+        fig2 = px.pie(
+            donut,
+            values="Value",
+            names="Status",
+            hole=0.65
         )
 
-        if ricerca:
-
-            mask = df.astype(str).apply(
-                lambda x: x.str.contains(
-                    ricerca,
-                    case=False,
-                    na=False
-                )
-            ).any(axis=1)
-
-            df = df[mask]
-
-        st.dataframe(
-            df,
-            use_container_width=True,
-            height=700
+        fig2.update_layout(
+            title="Conformità Complessiva",
+            height=350
         )
 
-except Exception as e:
+        st.plotly_chart(
+            fig2,
+            use_container_width=True
+        )
 
-    st.error("Errore durante il caricamento")
-
-    st.code(str(e))
+    # ---------------------------------------------
+    # PERFORMANCE
+    # -------------
