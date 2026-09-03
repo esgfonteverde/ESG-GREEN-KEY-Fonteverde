@@ -148,3 +148,4 @@ if menu == "🏠 Dashboard":
 
     readiness = min(
         round((total_rows / 1000) * 100
+             )
