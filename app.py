@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 
 # ==========================================================
 # CONFIG
@@ -81,6 +80,13 @@ st.markdown("""
     margin-top: 8px;
     font-size: 12px;
     color: #999;
+}
+
+.section-card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0px 6px 16px rgba(0,0,0,0.08);
 }
 
 </style>
@@ -206,52 +212,12 @@ if menu == "🏠 Dashboard":
     st.markdown("##")
 
     # ======================================================
-    # GAUGE + DONUT
+    # GRAFICI
     # ======================================================
 
     left, right = st.columns(2)
 
     with left:
-
-        st.subheader("Audit Readiness")
-
-        fig_gauge = go.Figure(
-            go.Indicator(
-                mode="gauge+number",
-                value=readiness,
-                number={"suffix": "%"},
-                gauge={
-                    "axis": {"range": [0, 100]},
-                    "bar": {"color": "#1F4D3A"},
-                    "steps": [
-                        {"range": [0, 60], "color": "#ffd6d6"},
-                        {"range": [60, 85], "color": "#fff2cc"},
-                        {"range": [85, 100], "color": "#d4edda"}
-                    ]
-                }
-            )
-        )
-
-        fig_gauge.update_layout(
-            height=380,
-            margin=dict(l=20, r=20, t=30, b=20)
-        )
-
-        st.plotly_chart(
-            fig_gauge,
-            use_container_width=True
-        )
-
-        if readiness >= 85:
-            st.success("✅ READY FOR AUDIT")
-
-        elif readiness >= 60:
-            st.warning("⚠️ ATTENTION REQUIRED")
-
-        else:
-            st.error("🔴 CRITICAL")
-
-    with right:
 
         st.subheader("Compliance Overview")
 
@@ -269,18 +235,7 @@ if menu == "🏠 Dashboard":
             df_donut,
             values="Value",
             names="Status",
-            hole=0.65,
-            color="Status",
-            color_discrete_map={
-                "Validated": "#2C6E49",
-                "Partial": "#D4AF37",
-                "Review": "#DCCDB3",
-                "Missing": "#C94C4C"
-            }
-        )
-
-        fig.update_layout(
-            height=430
+            hole=0.65
         )
 
         st.plotly_chart(
@@ -288,50 +243,42 @@ if menu == "🏠 Dashboard":
             use_container_width=True
         )
 
-    st.markdown("##")
+    with right:
 
-    # ======================================================
-    # PERFORMANCE
-    # ======================================================
+        st.subheader("Performance by Area")
 
-    st.subheader("Performance by Area")
+        df_bar = pd.DataFrame({
+            "Area": [
+                "Management",
+                "Energy",
+                "Water",
+                "Waste",
+                "Procurement",
+                "Guest Awareness"
+            ],
+            "Score": [
+                92,
+                86,
+                81,
+                88,
+                63,
+                74
+            ]
+        })
 
-    df_bar = pd.DataFrame({
-        "Area": [
-            "Management",
-            "Energy",
-            "Water",
-            "Waste",
-            "Procurement",
-            "Guest Awareness"
-        ],
-        "Score": [
-            92,
-            86,
-            81,
-            88,
-            63,
-            74
-        ]
-    })
+        fig2 = px.bar(
+            df_bar,
+            x="Score",
+            y="Area",
+            orientation="h",
+            color="Score",
+            color_continuous_scale="Greens"
+        )
 
-    fig2 = px.bar(
-        df_bar,
-        x="Score",
-        y="Area",
-        orientation="h",
-        color="Score",
-        color_continuous_scale="Greens"
-    )
-
-    fig2.update_layout(
-        height=450
-    )
-
-    st.plotly_chart(
-        fig2,
-        use_container_width=True
-    )
+        st.plotly_chart(
+            fig2,
+            use_container_width=True
+        )
 
     st.markdown("##")
 
@@ -375,7 +322,9 @@ elif menu == "📊 Esplora Excel":
         sheet_name=sheet
     )
 
-    search = st.text_input("Ricerca")
+    search = st.text_input(
+        "Ricerca"
+    )
 
     if search:
 
