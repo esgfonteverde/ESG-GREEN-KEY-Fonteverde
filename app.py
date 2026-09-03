@@ -397,6 +397,98 @@ elif menu == "📁 Evidence Repository":
                     """,
                     unsafe_allow_html=True
                 )
+# ==========================================================
+# GAP ANALYSIS
+# ==========================================================
+
+elif menu == "📊 Gap Analysis":
+
+    st.title("📊 Gap Analysis")
+
+    total_criteria = 132
+    evidence_available = 95
+    missing = total_criteria - evidence_available
+
+    c1, c2, c3 = st.columns(3)
+
+    with c1:
+        st.metric(
+            "Criteria",
+            total_criteria
+        )
+
+    with c2:
+        st.metric(
+            "Covered",
+            evidence_available
+        )
+
+    with c3:
+        st.metric(
+            "Missing",
+            missing
+        )
+
+    st.markdown("---")
+
+    gaps = pd.DataFrame({
+        "Criterion": [
+            "4.3",
+            "6.2",
+            "2.5",
+            "1.9",
+            "5.4"
+        ],
+        "Gap Type": [
+            "Missing Evidence",
+            "Policy Update Required",
+            "Communication Missing",
+            "Training Missing",
+            "Monitoring Missing"
+        ],
+        "Owner": [
+            "Maintenance",
+            "Purchasing",
+            "Guest Relations",
+            "HR",
+            "Housekeeping"
+        ],
+        "Priority": [
+            "High",
+            "High",
+            "Medium",
+            "Medium",
+            "Low"
+        ]
+    })
+
+    st.subheader("Open Gaps")
+
+    priority = st.selectbox(
+        "Filter Priority",
+        ["All", "High", "Medium", "Low"]
+    )
+
+    if priority != "All":
+        gaps = gaps[gaps["Priority"] == priority]
+
+    st.dataframe(
+        gaps,
+        use_container_width=True
+    )
+
+    st.markdown("### 🔥 Priority Issues")
+
+    high = gaps[gaps["Priority"] == "High"]
+
+    if len(high) == 0:
+        st.success("No high-priority gaps.")
+    else:
+        for _, row in high.iterrows():
+            st.warning(
+                f"{row['Criterion']} - {row['Gap Type']} ({row['Owner']})"
+            )
+
 elif menu == "📊 Esplora Excel":
 
     sheet = st.selectbox(
