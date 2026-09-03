@@ -107,6 +107,7 @@ menu = st.sidebar.radio(
     "Menu",
     [
         "🏠 Dashboard",
+        "📁 Evidence Repository",
         "📊 Esplora Excel"
     ]
 )
