@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 
 # ==========================================================
 # CONFIG
@@ -26,29 +27,60 @@ st.markdown("""
 }
 
 .metric-card {
-    background-color: white;
-    padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0px 2px 12px rgba(0,0,0,0.08);
-    text-align: center;
+    background: white;
+    padding: 28px;
+    border-radius: 22px;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.08);
+    text-align: left;
+    transition: all 0.3s ease;
+    height: 190px;
+}
+
+.metric-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0px 16px 35px rgba(0,0,0,0.15);
+}
+
+.card-green {
+    border-top: 5px solid #2C6E49;
+}
+
+.card-gold {
+    border-top: 5px solid #D4AF37;
+}
+
+.card-blue {
+    border-top: 5px solid #3B82F6;
+}
+
+.card-red {
+    border-top: 5px solid #C94C4C;
+}
+
+.metric-icon {
+    font-size: 30px;
+    margin-bottom: 12px;
 }
 
 .metric-number {
-    font-size: 42px;
+    font-size: 52px;
     font-weight: 700;
-    color: #2C6E49;
+    color: #1F4D3A;
+    line-height: 1;
 }
 
 .metric-label {
-    font-size: 16px;
+    margin-top: 12px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     color: #666;
 }
 
-.section-card {
-    background-color: white;
-    padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0px 2px 12px rgba(0,0,0,0.08);
+.metric-sub {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #999;
 }
 
 </style>
@@ -78,12 +110,10 @@ menu = st.sidebar.radio(
 # ==========================================================
 
 try:
-
     xls = pd.ExcelFile(FILE)
     sheet_names = xls.sheet_names
 
 except Exception:
-
     st.error("Errore caricamento Excel")
     st.stop()
 
@@ -93,8 +123,6 @@ except Exception:
 
 if menu == "🏠 Dashboard":
 
-    # HERO BANNER
-
     try:
         st.image(
             "banner_fonteverde_esg.jpg",
@@ -103,14 +131,11 @@ if menu == "🏠 Dashboard":
     except:
         st.warning("Banner non disponibile")
 
-    # CALCOLI BASE
-
     total_rows = 0
 
     for sheet in sheet_names:
 
         try:
-
             temp = pd.read_excel(
                 FILE,
                 sheet_name=sheet
@@ -122,109 +147,5 @@ if menu == "🏠 Dashboard":
             pass
 
     readiness = min(
-        round((total_rows / 1000) * 100),
-        100
-    )
-
-    criteria = 132
-    evidences = int(total_rows * 0.1)
-    gap = max(criteria - evidences, 0)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # KPI
-
-    c1, c2, c3, c4 = st.columns(4)
-
-    with c1:
-
-        st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-number">{readiness}%</div>
-            <div class="metric-label">Audit Readiness</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with c2:
-
-        st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-number">{criteria}</div>
-            <div class="metric-label">Certification Criteria</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with c3:
-
-        st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-number">{evidences}</div>
-            <div class="metric-label">Evidence</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with c4:
-
-        st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-number">{gap}</div>
-            <div class="metric-label">Gap</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown("##")
-
-    # GRAFICI
-
-    left, right = st.columns(2)
-
-    with left:
-
-        st.subheader("Compliance Overview")
-
-        df_donut = pd.DataFrame({
-            "Status": [
-                "Validated",
-                "Partial",
-                "Review",
-                "Missing"
-            ],
-            "Value": [54, 21, 15, 10]
-        })
-
-        fig = px.pie(
-            df_donut,
-            values="Value",
-            names="Status",
-            hole=0.65,
-            color="Status",
-            color_discrete_map={
-                "Validated": "#2C6E49",
-                "Partial": "#D4AF37",
-                "Review": "#DCCDB3",
-                "Missing": "#C94C4C"
-            }
-        )
-
-        st.plotly_chart(
-            fig,
-            use_container_width=True
-        )
-
-    with right:
-
-        st.subheader("Performance by Area")
-
-        df_bar = pd.DataFrame({
-
-            "Area": [
-                "Management",
-                "Energy",
-                "Water",
-                "Waste",
-                "Procurement",
-                "Guest Awareness"
-            ],
-
-            "Score": [
-                92,
+        round((total_rows / 1000) * 100
+             )
