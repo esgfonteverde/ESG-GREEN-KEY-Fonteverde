@@ -310,7 +310,92 @@ if menu == "🏠 Dashboard":
 # ==========================================================
 # EXPLORER
 # ==========================================================
+# ==========================================================
+# EVIDENCE REPOSITORY
+# ==========================================================
 
+elif menu == "📁 Evidence Repository":
+
+    st.title("📁 Evidence Repository")
+
+    search = st.text_input(
+        "🔍 Cerca evidenza"
+    )
+
+    repository = {
+        "Governance": [
+            "Sustainability_Policy.pdf",
+            "Green_Team_Meeting.pdf",
+            "ESG_Management_Plan.docx"
+        ],
+        "Energy": [
+            "Energy_Monitoring.xlsx",
+            "Utility_Bills.pdf",
+            "LED_Upgrade_Project.pdf"
+        ],
+        "Water": [
+            "Water_Consumption.xlsx",
+            "Water_Monitoring_Report.pdf"
+        ],
+        "Waste": [
+            "Waste_Register.xlsx",
+            "Waste_Management_Procedure.pdf"
+        ],
+        "Procurement": [
+            "Supplier_Policy.pdf",
+            "Sustainable_Procurement_Guidelines.docx"
+        ],
+        "Staff": [
+            "Training_Register.xlsx",
+            "Staff_Training_Green_Key.pdf"
+        ],
+        "Guests": [
+            "Guest_Communication.pdf",
+            "Guest_Environmental_Information.docx"
+        ],
+        "Biodiversity": [
+            "Biodiversity_Plan.pdf"
+        ],
+        "Health & Safety": [
+            "Safety_Procedure.pdf"
+        ],
+        "Reports": [
+            "Annual_ESG_Report.pdf"
+        ]
+    }
+
+    for category, docs in repository.items():
+
+        filtered_docs = []
+
+        for doc in docs:
+
+            if (
+                search == ""
+                or search.lower() in doc.lower()
+            ):
+                filtered_docs.append(doc)
+
+        if filtered_docs:
+
+            st.subheader(f"📂 {category}")
+
+            for doc in filtered_docs:
+
+                st.markdown(
+                    f"""
+                    <div style="
+                        background:white;
+                        padding:15px;
+                        border-radius:12px;
+                        margin-bottom:10px;
+                        box-shadow:0px 2px 10px rgba(0,0,0,0.08);
+                    ">
+                    📄 {doc}
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 elif menu == "📊 Esplora Excel":
 
     sheet = st.selectbox(
