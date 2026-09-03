@@ -147,5 +147,250 @@ if menu == "🏠 Dashboard":
             pass
 
     readiness = min(
-        round((total_rows / 1000) * 100
-             )
+        round((total_rows / 1000) * 100),
+        100
+    )
+
+    criteria = 132
+    evidences = int(total_rows * 0.1)
+    gap = max(criteria - evidences, 0)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # ======================================================
+    # KPI PREMIUM
+    # ======================================================
+
+    c1, c2, c3, c4 = st.columns(4)
+
+    with c1:
+        st.markdown(f"""
+        <div class="metric-card card-green">
+            <div class="metric-icon">📊</div>
+            <div class="metric-number">{readiness}%</div>
+            <div class="metric-label">Audit Readiness</div>
+            <div class="metric-sub">Overall compliance status</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c2:
+        st.markdown(f"""
+        <div class="metric-card card-gold">
+            <div class="metric-icon">✅</div>
+            <div class="metric-number">{criteria}</div>
+            <div class="metric-label">Certification Criteria</div>
+            <div class="metric-sub">Standards monitored</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c3:
+        st.markdown(f"""
+        <div class="metric-card card-blue">
+            <div class="metric-icon">📁</div>
+            <div class="metric-number">{evidences}</div>
+            <div class="metric-label">Evidence</div>
+            <div class="metric-sub">Documents available</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c4:
+        st.markdown(f"""
+        <div class="metric-card card-red">
+            <div class="metric-icon">⚠️</div>
+            <div class="metric-number">{gap}</div>
+            <div class="metric-label">Gap</div>
+            <div class="metric-sub">Items to be completed</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("##")
+
+    # ======================================================
+    # GAUGE + DONUT
+    # ======================================================
+
+    left, right = st.columns(2)
+
+    with left:
+
+        st.subheader("Audit Readiness")
+
+        fig_gauge = go.Figure(
+            go.Indicator(
+                mode="gauge+number",
+                value=readiness,
+                number={"suffix": "%"},
+                gauge={
+                    "axis": {"range": [0, 100]},
+                    "bar": {"color": "#1F4D3A"},
+                    "steps": [
+                        {"range": [0, 60], "color": "#ffd6d6"},
+                        {"range": [60, 85], "color": "#fff2cc"},
+                        {"range": [85, 100], "color": "#d4edda"}
+                    ]
+                }
+            )
+        )
+
+        fig_gauge.update_layout(
+            height=380,
+            margin=dict(l=20, r=20, t=30, b=20)
+        )
+
+        st.plotly_chart(
+            fig_gauge,
+            use_container_width=True
+        )
+
+        if readiness >= 85:
+            st.success("✅ READY FOR AUDIT")
+
+        elif readiness >= 60:
+            st.warning("⚠️ ATTENTION REQUIRED")
+
+        else:
+            st.error("🔴 CRITICAL")
+
+    with right:
+
+        st.subheader("Compliance Overview")
+
+        df_donut = pd.DataFrame({
+            "Status": [
+                "Validated",
+                "Partial",
+                "Review",
+                "Missing"
+            ],
+            "Value": [54, 21, 15, 10]
+        })
+
+        fig = px.pie(
+            df_donut,
+            values="Value",
+            names="Status",
+            hole=0.65,
+            color="Status",
+            color_discrete_map={
+                "Validated": "#2C6E49",
+                "Partial": "#D4AF37",
+                "Review": "#DCCDB3",
+                "Missing": "#C94C4C"
+            }
+        )
+
+        fig.update_layout(
+            height=430
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+    st.markdown("##")
+
+    # ======================================================
+    # PERFORMANCE
+    # ======================================================
+
+    st.subheader("Performance by Area")
+
+    df_bar = pd.DataFrame({
+        "Area": [
+            "Management",
+            "Energy",
+            "Water",
+            "Waste",
+            "Procurement",
+            "Guest Awareness"
+        ],
+        "Score": [
+            92,
+            86,
+            81,
+            88,
+            63,
+            74
+        ]
+    })
+
+    fig2 = px.bar(
+        df_bar,
+        x="Score",
+        y="Area",
+        orientation="h",
+        color="Score",
+        color_continuous_scale="Greens"
+    )
+
+    fig2.update_layout(
+        height=450
+    )
+
+    st.plotly_chart(
+        fig2,
+        use_container_width=True
+    )
+
+    st.markdown("##")
+
+    # ======================================================
+    # AZIONI ED EVIDENZE
+    # ======================================================
+
+    a1, a2 = st.columns(2)
+
+    with a1:
+
+        st.subheader("🔥 Priority Actions")
+
+        st.warning("Upload evidence for criterion 4.3")
+        st.warning("Update sustainable procurement policy")
+        st.warning("Complete guest communication")
+        st.warning("Update Green Team documentation")
+
+    with a2:
+
+        st.subheader("📄 Recent Evidence")
+
+        st.success("Sustainability_Policy.pdf")
+        st.success("Green_Team_Meeting.pdf")
+        st.success("Water_Consumption.xlsx")
+        st.success("Energy_Monitoring.xlsx")
+
+# ==========================================================
+# EXPLORER
+# ==========================================================
+
+elif menu == "📊 Esplora Excel":
+
+    sheet = st.selectbox(
+        "Seleziona foglio",
+        sheet_names
+    )
+
+    df = pd.read_excel(
+        FILE,
+        sheet_name=sheet
+    )
+
+    search = st.text_input("Ricerca")
+
+    if search:
+
+        mask = df.astype(str).apply(
+            lambda x: x.str.contains(
+                search,
+                case=False,
+                na=False
+            )
+        ).any(axis=1)
+
+        df = df[mask]
+
+    st.dataframe(
+        df,
+        use_container_width=True,
+        height=700
+    )
