@@ -330,43 +330,60 @@ if menu == "🏠 Dashboard":
 
     left, right = st.columns(2)
 
-    with left:
+with left:
 
-        if readiness >= 85:
-            status = "READY ✅"
-            color = "#2C6E49"
+    st.markdown(
+        f"""
+        <div style="
+            background:white;
+            border-radius:24px;
+            padding:50px;
+            text-align:center;
+            box-shadow:0px 10px 25px rgba(0,0,0,0.08);
+            min-height:430px;
+        ">
 
-        elif readiness >= 60:
-            status = "ATTENTION ⚠️"
-            color = "#D4AF37"
-
-        else:
-            status = "CRITICAL 🔴"
-            color = "#C94C4C"
-
-        st.markdown(f"""
-        <div class="readiness-card">
-
-            <div class="readiness-title">
+            <div style="
+                font-size:16px;
+                letter-spacing:2px;
+                text-transform:uppercase;
+                color:#888;
+            ">
                 Audit Readiness
             </div>
 
-            <div class="readiness-score">
+            <div style="
+                font-size:96px;
+                font-weight:700;
+                color:#1F4D3A;
+                margin-top:20px;
+            ">
                 {readiness}%
             </div>
 
-            <div class="readiness-status"
-                 style="color:{color};">
+            <div style="
+                margin-top:20px;
+                font-size:28px;
+                font-weight:600;
+                color:{color};
+            ">
                 {status}
             </div>
 
-            <div class="readiness-sub">
+            <div style="
+                margin-top:20px;
+                color:#888;
+                font-size:14px;
+            ">
                 Based on completed criteria
             </div>
 
         </div>
-        """, unsafe_allow_html=True)
-
+        """,
+        unsafe_allow_html=True
+    )
+``
+   
     with right:
 
         donut = pd.DataFrame({
