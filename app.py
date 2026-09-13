@@ -290,38 +290,39 @@ if menu == "🏠 Dashboard":
 
     with left:
 
-    st.subheader("Audit Readiness")
+      st.subheader("Audit Readiness")
 
-    st.metric(
+      st.metric(
         "Current Status",
         f"{readiness}%"
-    )
+      )
 
-    if readiness >= 85:
+      if readiness >= 85:
 
-        st.success("READY ✅")
+          st.success("READY ✅")
 
-    elif readiness >= 60:
+      elif readiness >= 60:
 
-        st.warning("ATTENTION ⚠️")
+          st.warning("ATTENTION ⚠️")
 
-    else:
+      else:
 
-        st.error("CRITICAL 🔴")
+          st.error("CRITICAL 🔴")
+  
+      st.metric(
+          "Completed Criteria",
+          completed
+      )
 
-    st.metric(
-        "Completed Criteria",
-        completed
-    )
+      st.metric(
+          "Open Gaps",
+          gap
+      )
 
-    st.metric(
-        "Open Gaps",
-        gap
-    )
-
-    st.caption(
-        "Based on criteria status from Excel"
-    )
+      st.caption(
+          "Based on criteria status from Excel"
+      )
+   
 
     with right:
 
