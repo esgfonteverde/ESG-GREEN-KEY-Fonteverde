@@ -288,41 +288,44 @@ if menu == "🏠 Dashboard":
 
     left, right = st.columns(2)
 
-with left:
+    with left:
 
-    st.subheader("Audit Readiness")
+        if readiness >= 85:
+            status = "READY ✅"
+            color = "#2C6E49"
 
-    st.metric(
-        label="Readiness",
-        value=f"{readiness}%"
-    )
+        elif readiness >= 60:
+            status = "ATTENTION ⚠️"
+            color = "#D4AF37"
 
-    if readiness >= 85:
-        st.success("READY ✅")
+        else:
+            status = "CRITICAL 🔴"
+            color = "#C94C4C"
 
-    elif readiness >= 60:
-        st.warning("ATTENTION ⚠️")
+        st.markdown(f"""
+        <div class="readiness-card">
 
-    else:
-        st.error("CRITICAL 🔴")
+            <div class="readiness-title">
+                Audit Readiness
+            </div>
 
-    st.write("")
+            <div class="readiness-score">
+                {readiness}%
+            </div>
 
-    st.metric(
-        "Completed Criteria",
-        completed
-    )
+            <div class="readiness-status"
+                 style="color:{color};">
+                {status}
+            </div>
 
-    st.metric(
-        "Open Gaps",
-        gap
-    )
+            <div class="readiness-sub">
+                Based on completed criteria
+            </div>
 
-    st.caption(
-        "Based on criteria status from Excel"
-    )
-   
-with right:
+        </div>
+        """, unsafe_allow_html=True)
+
+    with right:
 
         donut = pd.DataFrame({
             "Status": [
