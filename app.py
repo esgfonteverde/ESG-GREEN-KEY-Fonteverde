@@ -382,7 +382,6 @@ with left:
         """,
         unsafe_allow_html=True
     )
-``
    
     with right:
 
