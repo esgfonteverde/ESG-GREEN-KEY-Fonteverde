@@ -125,49 +125,7 @@ st.markdown("""
     box-shadow:0px 4px 12px rgba(0,0,0,0.08);
     margin-bottom:10px;
 }
-.readiness-card{
-    background:white;
-    border-radius:24px;
-    padding:50px;
-    text-align:center;
-    box-shadow:0px 10px 25px rgba(0,0,0,0.08);
-    min-height:430px;
-}
 
-.readiness-title{
-    font-size:16px;
-    letter-spacing:2px;
-    text-transform:uppercase;
-    color:#888;
-}
-
-.readiness-score{
-    font-size:96px;
-    font-weight:700;
-    color:#1F4D3A;
-    line-height:1;
-    margin-top:20px;
-}
-
-.readiness-status{
-    font-size:28px;
-    font-weight:600;
-    margin-top:20px;
-}
-
-.readiness-sub{
-    margin-top:20px;
-    color:#888;
-    font-size:14px;
-}
-
-.repo-card{
-    background:white;
-    border-radius:14px;
-    padding:14px;
-    box-shadow:0px 4px 12px rgba(0,0,0,0.08);
-    margin-bottom:10px;
-}
 </style>
 """, unsafe_allow_html=True)
 
@@ -330,59 +288,43 @@ if menu == "🏠 Dashboard":
 
     left, right = st.columns(2)
 
-with left:
+    with left:
 
-    st.markdown(
-        f"""
-        <div style="
-            background:white;
-            border-radius:24px;
-            padding:50px;
-            text-align:center;
-            box-shadow:0px 10px 25px rgba(0,0,0,0.08);
-            min-height:430px;
-        ">
+        if readiness >= 85:
+            status = "READY ✅"
+            color = "#2C6E49"
 
-            <div style="
-                font-size:16px;
-                letter-spacing:2px;
-                text-transform:uppercase;
-                color:#888;
-            ">
+        elif readiness >= 60:
+            status = "ATTENTION ⚠️"
+            color = "#D4AF37"
+
+        else:
+            status = "CRITICAL 🔴"
+            color = "#C94C4C"
+
+        st.markdown(f"""
+        <div class="readiness-card">
+
+            <div class="readiness-title">
                 Audit Readiness
             </div>
 
-            <div style="
-                font-size:96px;
-                font-weight:700;
-                color:#1F4D3A;
-                margin-top:20px;
-            ">
+            <div class="readiness-score">
                 {readiness}%
             </div>
 
-            <div style="
-                margin-top:20px;
-                font-size:28px;
-                font-weight:600;
-                color:{color};
-            ">
+            <div class="readiness-status"
+                 style="color:{color};">
                 {status}
             </div>
 
-            <div style="
-                margin-top:20px;
-                color:#888;
-                font-size:14px;
-            ">
+            <div class="readiness-sub">
                 Based on completed criteria
             </div>
 
         </div>
-        """,
-        unsafe_allow_html=True
-    )
-   
+        """, unsafe_allow_html=True)
+
     with right:
 
         donut = pd.DataFrame({
