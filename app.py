@@ -288,21 +288,19 @@ if menu == "🏠 Dashboard":
 
     left, right = st.columns(2)
 
-  with left:
+    with left:
 
-    st.metric(
-        label="Audit Readiness",
-        value=f"{readiness}%"
-    )
+        if readiness >= 85:
+            status = "READY ✅"
+            color = "#2C6E49"
 
-    if readiness >= 85:
-        st.success("READY ✅")
+        elif readiness >= 60:
+            status = "ATTENTION ⚠️"
+            color = "#D4AF37"
 
-    elif readiness >= 60:
-        st.warning("ATTENTION ⚠️")
-
-    else:
-        st.error("CRITICAL 🔴")
+        else:
+            status = "CRITICAL 🔴"
+            color = "#C94C4C"
 
         st.markdown(f"""
         <div class="readiness-card">
