@@ -322,7 +322,7 @@ with left:
         "Based on criteria status from Excel"
     )
    
-    with right:
+with right:
 
         donut = pd.DataFrame({
             "Status": [
