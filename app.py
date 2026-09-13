@@ -290,40 +290,38 @@ if menu == "🏠 Dashboard":
 
     with left:
 
-        if readiness >= 85:
-            status = "READY ✅"
-            color = "#2C6E49"
+    st.subheader("Audit Readiness")
 
-        elif readiness >= 60:
-            status = "ATTENTION ⚠️"
-            color = "#D4AF37"
+    st.metric(
+        "Current Status",
+        f"{readiness}%"
+    )
 
-        else:
-            status = "CRITICAL 🔴"
-            color = "#C94C4C"
+    if readiness >= 85:
 
-        st.markdown(f"""
-        <div class="readiness-card">
+        st.success("READY ✅")
 
-            <div class="readiness-title">
-                Audit Readiness
-            </div>
+    elif readiness >= 60:
 
-            <div class="readiness-score">
-                {readiness}%
-            </div>
+        st.warning("ATTENTION ⚠️")
 
-            <div class="readiness-status"
-                 style="color:{color};">
-                {status}
-            </div>
+    else:
 
-            <div class="readiness-sub">
-                Based on completed criteria
-            </div>
+        st.error("CRITICAL 🔴")
 
-        </div>
-        """, unsafe_allow_html=True)
+    st.metric(
+        "Completed Criteria",
+        completed
+    )
+
+    st.metric(
+        "Open Gaps",
+        gap
+    )
+
+    st.caption(
+        "Based on criteria status from Excel"
+    )
 
     with right:
 
