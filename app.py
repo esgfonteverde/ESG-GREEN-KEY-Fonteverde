@@ -125,7 +125,49 @@ st.markdown("""
     box-shadow:0px 4px 12px rgba(0,0,0,0.08);
     margin-bottom:10px;
 }
+.readiness-card{
+    background:white;
+    border-radius:24px;
+    padding:50px;
+    text-align:center;
+    box-shadow:0px 10px 25px rgba(0,0,0,0.08);
+    min-height:430px;
+}
 
+.readiness-title{
+    font-size:16px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:#888;
+}
+
+.readiness-score{
+    font-size:96px;
+    font-weight:700;
+    color:#1F4D3A;
+    line-height:1;
+    margin-top:20px;
+}
+
+.readiness-status{
+    font-size:28px;
+    font-weight:600;
+    margin-top:20px;
+}
+
+.readiness-sub{
+    margin-top:20px;
+    color:#888;
+    font-size:14px;
+}
+
+.repo-card{
+    background:white;
+    border-radius:14px;
+    padding:14px;
+    box-shadow:0px 4px 12px rgba(0,0,0,0.08);
+    margin-bottom:10px;
+}
 </style>
 """, unsafe_allow_html=True)
 
